@@ -5,6 +5,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <iostream>
+#include <sstream>
 #include "RK4.h"
 #include "Entity.h"
 #include "Spring.h"
@@ -43,6 +44,8 @@ int _tmain(int argc, _TCHAR* argv[])
 	sf::Clock clock;
 	float time = 0;
 	float dtime = 0;
+	float accumulator = 0;
+	float frameTime = 0.01f;
 	
 	bool joystick = false;
 	bool fire = false;
@@ -69,6 +72,12 @@ int _tmain(int argc, _TCHAR* argv[])
 		dtime = (float) clock.restart().asSeconds();
 		time += dtime;
 
+		if(dtime > 0.25f)
+			dtime = 0.25f;
+
+		accumulator += dtime;
+
+		
         sf::Event event;
 
 		
@@ -76,7 +85,9 @@ int _tmain(int argc, _TCHAR* argv[])
         while (window.pollEvent(event))
         {
             if (event.type == sf::Event::Closed)
+			{
                 window.close();
+			}	
 			if (event.type == sf::Event::MouseButtonPressed) {
 				
 				//sf::Vector2<float> resultant = (sf::Vector2<float>) sf::Mouse::getPosition(window) - state.x;
@@ -103,13 +114,23 @@ int _tmain(int argc, _TCHAR* argv[])
         }
 
 		
-
-		hold.apply(dtime);
-		spr.apply(dtime);
-		//g.apply(dtime);
+		while(accumulator >= dtime)
+		{
+			hold.apply(frameTime);
+			spr.apply(frameTime);
+			//g.apply(dtime);
 		
-		RK4::integrate(b1.state, time, dtime);
-		RK4::integrate(b2.state, time, dtime);
+
+			RK4::integrate(b1.state, time, frameTime);
+			RK4::integrate(b2.state, time, frameTime);
+			accumulator -= frameTime;
+			
+		}
+		
+		///std::stringstream sstm;
+		///sstm << "FPS" << fps << std::endl;
+		///window.setTitle(sstm.str());
+
 		//RK4::integrate(centre.state, time, dtime);
 		/*if (sf::Joystick::isButtonPressed(0, 0))
 		{
@@ -126,10 +147,12 @@ int _tmain(int argc, _TCHAR* argv[])
 		centre.update();
 		
 
-        window.clear();
-        window.draw(b1.shape);
-		window.draw(b2.shape);
-		window.draw(centre.shape);
+		window.clear();
+		
+        window.draw(b1.sprite);
+		window.draw(b2.sprite);
+		window.draw(centre.sprite);
+		
 		
 
 		/*if(joystick) 
@@ -141,6 +164,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		}*/
 
         window.display();
+	
     }
 
     return 0;

@@ -4,8 +4,11 @@
 
 Entity::Entity(void)
 {
-	shape.setRadius(10.f);
-	shape.setFillColor(sf::Color::Red);
+	img.loadFromFile("Circle.png");
+	
+	sprite.setTexture(img);
+	
+	sprite.setOrigin(img.getSize().x / 2.0f, img.getSize().y / 2.0f);
 }
 
 

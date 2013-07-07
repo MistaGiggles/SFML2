@@ -10,12 +10,13 @@ public:
 	Entity(void);
 	~Entity(void);
 	RK4::State state;
-	sf::CircleShape shape;
+	sf::Sprite sprite;
+	sf::Texture img;
 
 	
 
 	void update() {
-		shape.setPosition(state.x);
+		sprite.setPosition(state.x);
 	}
 
 };
