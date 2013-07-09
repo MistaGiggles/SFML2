@@ -11,7 +11,7 @@ Spring::~Spring(void)
 
 void Spring::apply(float dt)
 {
-	RK4::springBetween(Constraint::a.state, Constraint::b.state, k, d);
+	RK4::springBetween((*Constraint::a).state, (*Constraint::b).state, k, d);
 	//Constraint::a.state.applyImpulse(RK4::springForce(Constraint::a.state, dt, dt);
 	
 }
@@ -24,7 +24,7 @@ void Spring::setParams(float _k, float _d)
 
 void Spring::render(sf::RenderTarget& display)
 {
-	sf::Vertex line[] = {sf::Vertex(a.state.x), sf::Vertex(b.state.x)};
+	sf::Vertex line[] = {sf::Vertex((*a).state.x), sf::Vertex((*b).state.x)};
 	display.draw(line,2,sf::Lines);
 
 }

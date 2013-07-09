@@ -28,18 +28,18 @@ struct State
 			impulses.x = impulses.y = 0;
 		}
 
-		State(float _x, float _y, float _m) {
-			mass = _m;
-			inversemass =  1.0f/mass;
+		State(float _x, float _y, float _im) {
+			mass = 1.f/ _im;
+			inversemass = _im;
 			x.x = _x;
 			x.y = _y;
 			v.x = v.y = 0;
 			impulses.x = impulses.y = 0;
 		};
 
-		State(float _x, float _y, float _vx, float _vy, float _m) {
-			mass = _m;
-			inversemass =  1.0f/mass;
+		State(float _x, float _y, float _vx, float _vy, float _im) {
+			mass = 1.f / _im;
+			inversemass =  _im;
 			x.x = _x;
 			x.y = _y;
 			v.x = _vx;
@@ -47,6 +47,14 @@ struct State
 			impulses.x = impulses.y = 0;
 
 		};
+
+		void prepMass() {
+			mass = 1.0f / inversemass;
+		}
+
+		void setStatic() {
+			inversemass = 0;
+		}
 
 		void recalculate() {
 				// velocity = momentum * inverseMass

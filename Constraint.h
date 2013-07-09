@@ -1,5 +1,5 @@
 #pragma once
-
+#include <memory>
 #include "RK4.h"
 #include "Entity.h"
 
@@ -7,11 +7,11 @@
 class Constraint
 {
 public:
-	Constraint(Entity& _a, Entity& _b): b(_b), a(_a) {};
+	Constraint(std::shared_ptr<Entity> _a,std::shared_ptr<Entity> _b): b(_b), a(_a) {};
 	~Constraint(void);
 
-	Entity& a;
-	Entity& b;
+	std::shared_ptr<Entity> a;
+	std::shared_ptr<Entity> b;
 
 	
 

@@ -8,10 +8,12 @@ class Entity
 {
 public:
 	Entity(void);
+	Entity(float x, float y, float im) : state(x,y,im) {loadDefault();};
 	~Entity(void);
 	RK4::State state;
 	sf::Sprite sprite;
 	sf::Texture img;
+	void loadDefault();
 
 	
 

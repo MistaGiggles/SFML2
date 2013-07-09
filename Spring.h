@@ -6,7 +6,7 @@ class Spring :
 {
 public:
 	using Constraint::apply;
-	Spring(Entity& _a, Entity& _b) : Constraint(_a, _b) {};
+	Spring(std::shared_ptr<Entity> _a, std::shared_ptr<Entity> _b) : Constraint(_a, _b) {};
 	void apply(float dt);
 	~Spring(void);
 	void setParams(float _k, float _b);

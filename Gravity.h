@@ -5,7 +5,7 @@ class Gravity :
 {
 public:
 	using Constraint::apply;
-	Gravity(Entity& _a, Entity& _b) : Constraint(_a, _b) {};
+	Gravity(std::shared_ptr<Entity> _a, std::shared_ptr<Entity> _b) : Constraint(_a, _b) {};
 	void setParam(float _g);
 	void apply(float dt);
 	~Gravity(void);

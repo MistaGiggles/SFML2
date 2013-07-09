@@ -1,4 +1,5 @@
 #pragma once
+#include <memory>
 #include "RK4.h"
 #include "Entity.h"
 #include "Constraint.h"
@@ -10,18 +11,22 @@ class World
 public:
 	World(void);
 	~World(void);
-	std::vector<Entity*> entities;
-	std::vector<Constraint*> constraints;
+	std::vector<std::shared_ptr<Entity>> entities;
+	std::vector<std::shared_ptr<Constraint>> constraints;
 
 	void updateImpulses(float dt);
 	void integrate(float time, float frametime);
 	void applyUpdates(float dt);
 	void render( sf::RenderTarget& display);
 	
-	void addEntity(Entity* e);
-	void addConstraint(Constraint* c);
+	void addEntity(std::shared_ptr<Entity> e);
+	void addConstraint(std::shared_ptr<Constraint> c);
 
 	void printInfo();
+
+
+	std::shared_ptr<Entity> createBasic(float x, float y, float m);
+	std::shared_ptr<Constraint> createSpring(std::shared_ptr<Entity> _a, std::shared_ptr<Entity>_b);
 
 private:
 	
