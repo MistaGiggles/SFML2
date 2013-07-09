@@ -15,3 +15,14 @@ Entity::Entity(void)
 Entity::~Entity(void)
 {
 }
+
+
+void Entity::render(sf::RenderTarget& display)
+{
+	display.draw(sprite);
+}
+
+void Entity::update()
+{
+		sprite.setPosition(state.x);
+}

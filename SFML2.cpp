@@ -10,42 +10,47 @@
 #include "Entity.h"
 #include "Spring.h"
 #include "Gravity.h"
+#include "World.h"
 
 
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
-	sf::CircleShape shape(10.f);
-    shape.setFillColor(sf::Color::Red);
-	shape.setOrigin(shape.getRadius(), shape.getRadius());
+	sf::RenderWindow window(sf::VideoMode(800, 800), "SFML works!");
+	
 	
 	Entity b1;
 	Entity b2;
 	Entity centre;
 
-	centre.state.x.x = centre.state.x.y = 100;
+	centre.state.x.x = centre.state.x.y = 400;
 	centre.state.inversemass = 0;
 	
-	b1.state.x.x = 20; b1.state.x.y = 20;
+	b1.state.x.x = b1.state.x.y = 200;
 	b1.state.inversemass = 0.1f;
 	
-	b2.state.x.x = 180; b2.state.x.y = 60;
+	b2.state.x.x = b2.state.x.y = 600;
 
 
-	Gravity g(b1, b2);
-	g.setParam(100);
-	Spring spr(b1, b2);
+	Gravity g1(b1, b1);
+	Gravity g2(b2, b2);
+
+	g1.setParam(1500);
+	g2.setParam(1500);
+	Spring spr(centre, b2);
 
 	Spring hold(centre, b1);
-	hold.setParams(10, 0);
-	spr.setParams(10,0);
+	hold.setParams(1, 0.1f);
+	spr.setParams(1,0.1f);
 
+
+
+	
 	sf::Clock clock;
 	float time = 0;
 	float dtime = 0;
 	float accumulator = 0;
-	float frameTime = 0.01f;
+	float frameTime = 0.016f;
 	
 	bool joystick = false;
 	bool fire = false;
@@ -57,16 +62,20 @@ int _tmain(int argc, _TCHAR* argv[])
 		joystick = true;
 	}
 
-	sf::Font font;
-	if(!font.loadFromFile("mode7.ttf"))
-	{
-		std::cout<<"Error loading font"<<std::endl;
-	}
+	
 	int joy = 0;
 	int numAxis = 3;
 	
+	World world;
 
-
+	world.addEntity(&centre); world.addEntity(&b1); world.addEntity(&b2);
+	world.addConstraint(&hold); world.addConstraint(&spr); world.addConstraint(&g1); world.addConstraint(&g2);
+	/*
+	1)		void updateImpulses(float dt);
+	2)		void integrate(float time, float frametime);
+	3)		void applyUpdates(float dt);
+	4)		void render( sf::RenderTarget& display, float t, float dt);
+	*/
     while (window.isOpen())
     {
 		dtime = (float) clock.restart().asSeconds();
@@ -90,21 +99,17 @@ int _tmain(int argc, _TCHAR* argv[])
 			}	
 			if (event.type == sf::Event::MouseButtonPressed) {
 				
-				//sf::Vector2<float> resultant = (sf::Vector2<float>) sf::Mouse::getPosition(window) - state.x;
-				//state.applyImpulse(resultant.x * 10000, resultant.y * 10000);
-				
-				b1.state.print();
 
 			}
 
 			if(event.type == sf::Event::JoystickButtonPressed) {
-				std::cout<<"Joystick: "<<event.joystickButton.button<<std::endl;
+				
 			}
 
 			if(event.type == sf::Event::JoystickMoved) {
 				//std::cout<<"Axis: "<<event.joystickMove.axis<<" Moved"<<std::endl;
-				int axis = event.joystickMove.axis;
-				int pos = event.joystickMove.position;
+				//int axis = event.joystickMove.axis;
+				//int pos = event.joystickMove.position;
 
 
 			}
@@ -116,52 +121,29 @@ int _tmain(int argc, _TCHAR* argv[])
 		
 		while(accumulator >= dtime)
 		{
-			hold.apply(frameTime);
-			spr.apply(frameTime);
-			//g.apply(dtime);
+			world.updateImpulses(frameTime);
+			world.integrate(time, frameTime);
+			world.applyUpdates(frameTime);
+
+
 		
 
-			RK4::integrate(b1.state, time, frameTime);
-			RK4::integrate(b2.state, time, frameTime);
+			//RK4::integrate(b1.state, time, frameTime);
+			//RK4::integrate(b2.state, time, frameTime);
 			accumulator -= frameTime;
+			
 			
 		}
 		
-		///std::stringstream sstm;
-		///sstm << "FPS" << fps << std::endl;
-		///window.setTitle(sstm.str());
-
-		//RK4::integrate(centre.state, time, dtime);
-		/*if (sf::Joystick::isButtonPressed(0, 0))
-		{
-			// yes: shoot!
-			if(!fire)
-				state.applyImpulse(sf::Joystick::getAxisPosition(0, sf::Joystick::X), sf::Joystick::getAxisPosition(0, sf::Joystick::Y));
-			fire = true;
-		} else {
-			fire = false;
-		}*/
 		
-		b1.update();
-		b2.update();
-		centre.update();
+
+		
 		
 
 		window.clear();
 		
-        window.draw(b1.sprite);
-		window.draw(b2.sprite);
-		window.draw(centre.sprite);
-		
-		
-
-		/*if(joystick) 
-		{
-			float jx = sf::Joystick::getAxisPosition(0, sf::Joystick::X);
-			float jy = sf::Joystick::getAxisPosition(0, sf::Joystick::Y);
-			sf::Vertex joy[] = {sf::Vertex(state.x), sf::Vertex(state.x + sf::Vector2f(jx,jy))};
-			window.draw(joy,2,sf::Lines);
-		}*/
+		world.render(window);
+		//world.printInfo();
 
         window.display();
 	

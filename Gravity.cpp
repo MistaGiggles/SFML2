@@ -11,7 +11,8 @@ Gravity::~Gravity(void)
 
 void Gravity::apply(float dt)
 {
-	Constraint::a.state.applyImpulse(0, g);
+	Constraint::a.state.applyImpulse(0, g*Constraint::a.state.mass*dt);
+	//Constraint::b.state.applyImpulse(0, g);
 }
 
 void Gravity::setParam(float _g)

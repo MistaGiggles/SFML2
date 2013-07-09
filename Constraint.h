@@ -16,5 +16,6 @@ public:
 	
 
 	virtual void apply(float dt) {};
+	virtual void render(sf::RenderTarget& display) {};
 };
 

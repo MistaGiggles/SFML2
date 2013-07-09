@@ -15,9 +15,9 @@ public:
 
 	
 
-	void update() {
-		sprite.setPosition(state.x);
-	}
+	void update() ;
+
+	void render(sf::RenderTarget& display);
 
 };
 

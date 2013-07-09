@@ -10,10 +10,10 @@ public:
 	void apply(float dt);
 	~Spring(void);
 	void setParams(float _k, float _b);
-
+	void render(sf::RenderTarget& display);
 	//sf::Vertex[] getPoints();
 
 	float k;
-	float b;
+	float d;
 };
 
