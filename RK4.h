@@ -94,7 +94,7 @@ struct State
 	Derivative evaluate(State& initial, float t, float dt,  Derivative &d);
 
 	sf::Vector2<float> springForce( State state, float t, float dt);
-	void springBetween(State& o1, State& o2, float k, float b);
+	void springBetween(State& o1, State& o2, float k, float b, float dt);
 
 	void integrate(State &state, float t, float dt);
 };

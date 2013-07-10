@@ -35,12 +35,12 @@ sf::Vector2<float> RK4::springForce(State state, float t, float dt)
 	return (-k * ( state.x - springPos ) - b*state.p) + sf::Vector2<float>(0, 500) + (-k * ( state.x - springPos2 ) - b*state.p)  ;
 }
 
-void RK4::springBetween(State& o1, State& o2, float k, float b)
+void RK4::springBetween(State& o1, State& o2, float k, float b, float dt)
 {
 	const sf::Vector2<float> d12 = o2.x - o1.x;
 	const sf::Vector2<float> d21 = o1.x - o2.x;
-	o1.applyImpulse((-k * d21 - b*o1.p));
-	o2.applyImpulse(-k * d12 - b*o2.p);
+	o1.applyImpulse(dt*(-k * d21 - b*o1.p));
+	o2.applyImpulse(dt*(-k * d12 - b*o2.p));
 
 	
 

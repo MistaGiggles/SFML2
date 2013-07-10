@@ -26,11 +26,13 @@ public:
 
 
 	std::shared_ptr<Entity> createBasic(float x, float y, float m);
-	std::shared_ptr<Constraint> createSpring(std::shared_ptr<Entity> _a, std::shared_ptr<Entity>_b);
+	std::shared_ptr<Constraint> createSpring(std::shared_ptr<Entity> _a, std::shared_ptr<Entity>_b, float k, float d);
+
+	void setGrav(float x, float y);
 
 private:
 	
-	
+	sf::Vector2<float> gravity;
 
 };
 

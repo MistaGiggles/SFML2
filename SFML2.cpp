@@ -39,7 +39,8 @@ int _tmain(int argc, _TCHAR* argv[])
 	int numAxis = 3;
 
 	World world;
-	world.createSpring(world.createBasic(400,200, 0), world.createBasic(200,150, 1));
+	world.setGrav(0, 100000);
+	world.createSpring(world.createBasic(400,200, 0), world.createBasic(200,150, 1), 500, 10);
 
 
 	/*
